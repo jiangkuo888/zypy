@@ -83,7 +83,7 @@ public class NetworkHandler : MonoBehaviour {
 		
 		Debug.Log ("Room joined.");
 
-		UpdatePlayerList ();
+		GameManager.SP.updatePlayerList ();
 		//Debug.Log("OnJoinedRoom() called by PUN. Now this client is in a room. From here on, your game would be running. For reference, all callbacks are listed in enum: PhotonNetworkingMessage");
 	}
 	
@@ -92,6 +92,7 @@ public class NetworkHandler : MonoBehaviour {
 		Debug.Log("OnJoinedLobby(). Use a GUI to show existing rooms available in PhotonNetwork.GetRoomList().");
 	}
 
+	[RPC]
 	public void UpdatePlayerList()
 	{
 		if (PhotonNetwork.connected) {
@@ -103,6 +104,9 @@ public class NetworkHandler : MonoBehaviour {
 		}
 
 		PlayerNumber = PhotonNetwork.playerList.Length;
+
+
+		GameManager.SP.updatePlayerList ();
 	}
 	
 	// submit local player name
@@ -110,11 +114,19 @@ public class NetworkHandler : MonoBehaviour {
 	{
 		if (PhotonNetwork.connected) {
 			PhotonNetwork.playerName = PlayerInput.value;
-			print (PhotonNetwork.playerName);
+//			print (PhotonNetwork.playerName);
 		}
 		
 		NGUITools.SetActive (PlayerInput.gameObject, false);
 		NGUITools.SetActive (WaitingString.gameObject, true);
-		
+
+		myView.RPC ("UpdatePlayerList", PhotonTargets.All);
+
+	}
+
+	
+	public void OnApplicationQuit()
+	{
+		PhotonNetwork.LeaveRoom ();
 	}
 }

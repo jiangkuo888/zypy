@@ -41,7 +41,7 @@ public class UICenterOnChild : MonoBehaviour
 	public OnCenterCallback onCenter;
 
 	UIScrollView mScrollView;
-	GameObject mCenteredObject;
+	public GameObject mCenteredObject;
 
 	/// <summary>
 	/// Game object that the draggable panel is currently centered on.
